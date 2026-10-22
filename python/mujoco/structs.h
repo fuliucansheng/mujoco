@@ -1323,6 +1323,24 @@ void DefineStructFunctions(pybind11::class_<C, O...> c) {
   c.def("__repr__", StructRepr<C>);
 }
 
+namespace _impl {
+
+// These anonymous C substructures have internal linkage with MSVC. Keep their
+// copy constructors visible in each translation unit that invokes them.
+#define X(type, var, dim)
+#define XVEC(type, var, dim) \
+  , var(InitPyArray(std::array{dim}, ptr_->var, owner_))
+inline MjVisualHeadlightWrapper::MjWrapper(const MjVisualHeadlightWrapper& other)
+    : WrapperBase(new raw::MjVisualHeadlight(*other.ptr_))
+          MJVISUAL_HEADLIGHT_FIELDS {}
+
+inline MjVisualRgbaWrapper::MjWrapper(const MjVisualRgbaWrapper& other)
+    : WrapperBase(new raw::MjVisualRgba(*other.ptr_)) MJVISUAL_RGBA_FIELDS {}
+#undef XVEC
+#undef X
+
+}  // namespace _impl
+
 }  // namespace mujoco::python
 
 #endif  // MUJOCO_PYTHON_STRUCTS_H_

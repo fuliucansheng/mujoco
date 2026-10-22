@@ -121,81 +121,23 @@ MjOptionWrapper::MjWrapper(const MjOptionWrapper& other) : MjOptionWrapper() {
 }
 
 // ==================== MJVISUAL ===============================================
-#define X(var) var(InitPyArray(ptr_->var, owner_))
+#define X(type, var, dim)
+#define XVEC(type, var, dim) \
+  , var(InitPyArray(std::array{dim}, ptr_->var, owner_))
 MjVisualHeadlightWrapper::MjWrapper()
-    : WrapperBase(new raw::MjVisualHeadlight{}),
-      X(ambient),
-      X(diffuse),
-      X(specular) {}
+    : WrapperBase(new raw::MjVisualHeadlight{}) MJVISUAL_HEADLIGHT_FIELDS {}
 
 MjVisualHeadlightWrapper::MjWrapper(raw::MjVisualHeadlight* ptr,
-                                    py::handle owner)
-    : WrapperBase(ptr, owner), X(ambient), X(diffuse), X(specular) {}
-#undef X
+                                   py::handle owner)
+    : WrapperBase(ptr, owner) MJVISUAL_HEADLIGHT_FIELDS {}
 
-MjVisualHeadlightWrapper::MjWrapper(const MjVisualHeadlightWrapper& other)
-    : MjVisualHeadlightWrapper() {
-  *this->ptr_ = *other.ptr_;
-}
-
-#define X(var) var(InitPyArray(ptr_->var, owner_))
 MjVisualRgbaWrapper::MjWrapper()
-    : WrapperBase(new raw::MjVisualRgba{}),
-      X(fog),
-      X(haze),
-      X(force),
-      X(inertia),
-      X(joint),
-      X(actuator),
-      X(actuatornegative),
-      X(actuatorpositive),
-      X(com),
-      X(camera),
-      X(light),
-      X(selectpoint),
-      X(connect),
-      X(contactpoint),
-      X(contactforce),
-      X(contactfriction),
-      X(contacttorque),
-      X(contactgap),
-      X(rangefinder),
-      X(constraint),
-      X(slidercrank),
-      X(crankbroken),
-      X(frustum) {}
+    : WrapperBase(new raw::MjVisualRgba{}) MJVISUAL_RGBA_FIELDS {}
 
 MjVisualRgbaWrapper::MjWrapper(raw::MjVisualRgba* ptr, py::handle owner)
-    : WrapperBase(ptr, owner),
-      X(fog),
-      X(haze),
-      X(force),
-      X(inertia),
-      X(joint),
-      X(actuator),
-      X(actuatornegative),
-      X(actuatorpositive),
-      X(com),
-      X(camera),
-      X(light),
-      X(selectpoint),
-      X(connect),
-      X(contactpoint),
-      X(contactforce),
-      X(contactfriction),
-      X(contacttorque),
-      X(contactgap),
-      X(rangefinder),
-      X(constraint),
-      X(slidercrank),
-      X(crankbroken),
-      X(frustum) {}
+    : WrapperBase(ptr, owner) MJVISUAL_RGBA_FIELDS {}
+#undef XVEC
 #undef X
-
-MjVisualRgbaWrapper::MjWrapper(const MjVisualRgbaWrapper& other)
-    : MjVisualRgbaWrapper() {
-  *this->ptr_ = *other.ptr_;
-}
 
 MjVisualWrapper::MjWrapper()
     : WrapperBase(new raw::MjVisual{}),
